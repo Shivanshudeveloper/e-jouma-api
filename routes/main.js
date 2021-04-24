@@ -56,6 +56,11 @@ router.post('/addgoal', (req, res) => {
         goal3,
         goal4,
         goal5,
+        completegoal1: false,
+        completegoal2: false,
+        completegoal3: false,
+        completegoal4: false,
+        completegoal5: false,
         todaydate,
         userId,
         completed: false,
@@ -73,9 +78,10 @@ router.post('/addgoal', (req, res) => {
 // @POST Request to add item in cart
 // POST 
 router.post('/addthesoulprint', (req, res) => {
-    const { soulprint, userId } = req.body;
+    const { soulprint, todaydate, userId } = req.body;
     const newTheSoulPrint = new SoulPrints_Model({
         soulprint,
+        todaydate,
         userId
     });
     newTheSoulPrint.save()
@@ -111,13 +117,41 @@ router.post('/addgratitude', (req, res) => {
 // Database CRUD Operations
 // @POST Request to add item in cart
 // POST 
-router.get('/dailyfivegoalsmarkcomplete/:goalId', (req, res) => {
-    const { goalId } = req.params;
-    Goals_Model.findOneAndUpdate({'_id': goalId}, { completed: true }, { useFindAndModify: false })
-        .then(() => {
-            res.status(200).json('Marked Completed')
-        })
-        .catch(err => res.status(500).json('Server Error'))
+router.get('/dailyfivegoalsmarkcomplete/:goalId/:goal', (req, res) => {
+    const { goalId, goal } = req.params;
+    if (goal == 1) {
+        Goals_Model.findOneAndUpdate({'_id': goalId}, { completegoal1: true }, { useFindAndModify: false })
+            .then(() => {
+                res.status(200).json('Marked Completed')
+            })
+            .catch(err => res.status(500).json('Server Error'))
+    } else if (goal == 2) {
+        Goals_Model.findOneAndUpdate({'_id': goalId}, { completegoal2: true }, { useFindAndModify: false })
+            .then(() => {
+                res.status(200).json('Marked Completed')
+            })
+            .catch(err => res.status(500).json('Server Error'))
+    } else if (goal == 3) {
+        Goals_Model.findOneAndUpdate({'_id': goalId}, { completegoal3: true }, { useFindAndModify: false })
+            .then(() => {
+                res.status(200).json('Marked Completed')
+            })
+            .catch(err => res.status(500).json('Server Error'))
+    } else if (goal == 4) {
+        Goals_Model.findOneAndUpdate({'_id': goalId}, { completegoal4: true }, { useFindAndModify: false })
+            .then(() => {
+                res.status(200).json('Marked Completed')
+            })
+            .catch(err => res.status(500).json('Server Error'))
+    } else if (goal == 5) {
+        Goals_Model.findOneAndUpdate({'_id': goalId}, { completegoal5: true }, { useFindAndModify: false })
+            .then(() => {
+                res.status(200).json('Marked Completed')
+            })
+            .catch(err => res.status(500).json('Server Error'))
+    }
+
+    
 });
 
 
@@ -130,6 +164,57 @@ router.get('/longfivegoalsmarkcomplete/:goalId', (req, res) => {
     Goalfive_Model.findOneAndUpdate({'_id': goalId}, { completed: true }, { useFindAndModify: false })
         .then(() => {
             res.status(200).json('Marked Completed')
+        })
+        .catch(err => res.status(500).json('Server Error'))
+});
+
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/checkdailygoalscount/:userId/:todaydate', (req, res) => {
+    const { userId, todaydate } = req.params;
+    Goals_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                res.status(200).json('Not Found')
+            } else {
+                res.status(201).json('Found')
+            }
+        })
+        .catch(err => res.status(500).json('Server Error'))
+});
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/checkdailygratitudecount/:userId/:todaydate', (req, res) => {
+    const { userId, todaydate } = req.params;
+    Gratitude_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                res.status(200).json('Not Found')
+            } else {
+                res.status(201).json('Found')
+            }
+        })
+        .catch(err => res.status(500).json('Server Error'))
+});
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/checkdailysoulprintcount/:userId/:todaydate', (req, res) => {
+    const { userId, todaydate } = req.params;
+    SoulPrints_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                res.status(200).json('Not Found')
+            } else {
+                res.status(201).json('Found')
+            }
         })
         .catch(err => res.status(500).json('Server Error'))
 });
@@ -150,6 +235,36 @@ router.get('/fetchgoals/:userId', (req, res) => {
 });
 
 
+// Database CRUD Operations
+// @POST Request to GET the Item
+// GET 
+router.get('/fetchgoals2/:userId', (req, res) => {
+    const { userId } = req.params;
+    var fetchedDates = [];
+    var allData = [];
+    res.setHeader('Content-Type', 'application/json');
+    Goals_Model.find({ userId }).sort({date: -1})
+        .then(data => {
+            data.map((d) => {
+                fetchedDates.push(d.todaydate);
+            })
+            for (var i=0;i<fetchedDates.length; i++) {
+                var todaydate = fetchedDates[i];
+                Goals_Model.findOne({ userId, todaydate }).sort({date: -1})
+                    .then(data => {
+                        allData.push(data);
+                        Gratitude_Model.findOne({ userId, todaydate }).sort({date: -1})
+                            .then(data => {
+                                allData.push(data);
+                                console.log(allData);
+                            })
+                            .catch(err => res.status(400).json(`Error: ${err}`))
+                    })
+                    .catch(err => res.status(400).json(`Error: ${err}`))
+            }
+        })
+        .catch(err => res.status(400).json(`Error: ${err}`))
+});
 
 
 // Database CRUD Operations

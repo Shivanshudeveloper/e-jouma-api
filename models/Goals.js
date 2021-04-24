@@ -21,16 +21,32 @@ const goalsDataSchema = new mongoose.Schema({
         type: String,
         required: false
     },
+    completegoal1: {
+        type: Boolean,
+        required: false
+    },
+    completegoal2: {
+        type: Boolean,
+        required: false
+    },
+    completegoal3: {
+        type: Boolean,
+        required: false
+    },
+    completegoal4: {
+        type: Boolean,
+        required: false
+    },
+    completegoal5: {
+        type: Boolean,
+        required: false
+    },
     todaydate: {
         type: String,
         required: false
     },
     userId: {
         type: String,
-        required: false
-    },
-    completed: {
-        type: Boolean,
         required: false
     },
     endDate: {

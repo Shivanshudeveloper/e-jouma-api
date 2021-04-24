@@ -9,6 +9,10 @@ const soulprintsDataSchema = new mongoose.Schema({
         type: String,
         required: true
     },
+    todaydate: {
+        type: String,
+        required: false
+    },
     date: {
         type: Date,
         default: Date.now
