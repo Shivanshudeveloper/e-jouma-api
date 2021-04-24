@@ -10,6 +10,7 @@ const Registrations_Model = require('../models/Registrations');
 const Gratitude_Model = require('../models/Gratitude');
 const SuccessfullPayment_Model = require('../models/SuccessfullPayment');
 const SoulPrints_Model = require('../models/SoulPrints');
+const Wrap_Model = require('../models/Wrap');
 
 
 // const stripe = require('stripe')('sk_test_51IQmDSLbp71n4XnI9AJa2u03XqqNh2YTPlLtiAuiOOK6lrnpj8V1RnSNbxesLdCkChISlZXMJ89gIyr8WOBwCAlh00BCFkGRAW')
@@ -63,7 +64,6 @@ router.post('/addgoal', (req, res) => {
         completegoal5: false,
         todaydate,
         userId,
-        completed: false,
         endDate
     });
     newGoal.save()
@@ -71,6 +71,105 @@ router.post('/addgoal', (req, res) => {
             res.status(200).json(data)
         })
         .catch(err => res.status(500).json(`Server Error is ${err}`))
+});
+
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.post('/addmainwrapdata', (req, res) => {
+    const { goal1, goal2, goal3, goal4, goal5, todaydate, userId } = req.body;
+    Wrap_Model.countDocuments({ todaydate })
+        .then((count) => {
+            if (count === 0) {
+                const newGoal = new Wrap_Model({
+                    goal1,
+                    goal2,
+                    goal3,
+                    goal4,
+                    goal5,
+                    todaydate,
+                    userId,
+                });
+                newGoal.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                Wrap_Model.findOneAndUpdate({ todaydate }, { goal1, goal2, goal3, goal4, goal5, todaydate, userId }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
+        })
+        .catch(err => res.status(500).json('Server Error'))
+});
+
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.post('/addmainwrapdata2', (req, res) => {
+    const { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId } = req.body;
+    Wrap_Model.countDocuments({ todaydate })
+        .then((count) => {
+            if (count === 0) {
+                const newGratitude = new Wrap_Model({
+                    gratitude1,
+                    gratitude2,
+                    gratitude3,
+                    gratitude4,
+                    gratitude5,
+                    todaydate,
+                    userId,
+                });
+                newGratitude.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                Wrap_Model.findOneAndUpdate({ todaydate }, { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
+        })
+        .catch(err => res.status(500).json('Server Error'))
+});
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.post('/addmainwrapdata3', (req, res) => {
+    const { soulprint, todaydate, userId } = req.body;
+    Wrap_Model.countDocuments({ todaydate })
+        .then((count) => {
+            if (count === 0) {
+                const newTheSoulPrint = new Wrap_Model({
+                    soulprint,
+                    todaydate,
+                    userId
+                });
+                newTheSoulPrint.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                Wrap_Model.findOneAndUpdate({ todaydate }, { soulprint, todaydate, userId }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
+        })
+        .catch(err => res.status(500).json('Server Error'))
 });
 
 
@@ -166,6 +265,20 @@ router.get('/longfivegoalsmarkcomplete/:goalId', (req, res) => {
             res.status(200).json('Marked Completed')
         })
         .catch(err => res.status(500).json('Server Error'))
+});
+
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/printbookfetchwrap/:userId', (req, res) => {
+    const { userId } = req.params;
+    Wrap_Model.find({ userId }).sort({date: -1})
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(err => res.status(400).json(`Error: ${err}`))
 });
 
 
