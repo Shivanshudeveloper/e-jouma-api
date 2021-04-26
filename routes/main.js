@@ -91,6 +91,12 @@ router.post('/addmainwrapdata', (req, res) => {
                     goal5,
                     todaydate,
                     userId,
+                    gratitude1: "",
+                    gratitude2: "",
+                    gratitude3: "",
+                    gratitude4: "",
+                    gratitude5: "",
+                    soulprint: ""
                 });
                 newGoal.save()
                     .then((data) => {
@@ -126,6 +132,12 @@ router.post('/addmainwrapdata2', (req, res) => {
                     gratitude5,
                     todaydate,
                     userId,
+                    goal1: "",
+                    goal2: "",
+                    goal3: "",
+                    goal4: "",
+                    goal5: "",
+                    soulprint: ""
                 });
                 newGratitude.save()
                     .then((data) => {
@@ -154,7 +166,17 @@ router.post('/addmainwrapdata3', (req, res) => {
                 const newTheSoulPrint = new Wrap_Model({
                     soulprint,
                     todaydate,
-                    userId
+                    userId,
+                    gratitude1: "",
+                    gratitude2: "",
+                    gratitude3: "",
+                    gratitude4: "",
+                    gratitude5: "",
+                    goal1: "",
+                    goal2: "",
+                    goal3: "",
+                    goal4: "",
+                    goal5: ""
                 });
                 newTheSoulPrint.save()
                     .then((data) => {
