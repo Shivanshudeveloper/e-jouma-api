@@ -51,26 +51,40 @@ router.post('/addfivegoal', (req, res) => {
 // POST 
 router.post('/addgoal', (req, res) => {
     const { goal1, goal2, goal3, goal4, goal5, todaydate, userId, endDate } = req.body;
-    const newGoal = new Goals_Model({
-        goal1,
-        goal2,
-        goal3,
-        goal4,
-        goal5,
-        completegoal1: false,
-        completegoal2: false,
-        completegoal3: false,
-        completegoal4: false,
-        completegoal5: false,
-        todaydate,
-        userId,
-        endDate
-    });
-    newGoal.save()
-        .then((data) => {
-            res.status(200).json(data)
+    Goals_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                const newGoal = new Goals_Model({
+                    goal1,
+                    goal2,
+                    goal3,
+                    goal4,
+                    goal5,
+                    completegoal1: false,
+                    completegoal2: false,
+                    completegoal3: false,
+                    completegoal4: false,
+                    completegoal5: false,
+                    todaydate,
+                    userId,
+                    endDate
+                });
+                newGoal.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                Goals_Model.findOneAndUpdate({ todaydate, userId }, { goal1, goal2, goal3, goal4, goal5 }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
         })
-        .catch(err => res.status(500).json(`Server Error is ${err}`))
+        .catch(err => res.status(500).json('Server Error'))
+
+    
 });
 
 
@@ -80,7 +94,7 @@ router.post('/addgoal', (req, res) => {
 // POST 
 router.post('/addmainwrapdata', (req, res) => {
     const { goal1, goal2, goal3, goal4, goal5, todaydate, userId } = req.body;
-    Wrap_Model.countDocuments({ todaydate })
+    Wrap_Model.countDocuments({ todaydate, userId })
         .then((count) => {
             if (count === 0) {
                 const newGoal = new Wrap_Model({
@@ -104,7 +118,7 @@ router.post('/addmainwrapdata', (req, res) => {
                     })
                     .catch(err => res.status(500).json(`Server Error is ${err}`))
             } else {
-                Wrap_Model.findOneAndUpdate({ todaydate }, { goal1, goal2, goal3, goal4, goal5, todaydate, userId }, { useFindAndModify: false })
+                Wrap_Model.findOneAndUpdate({ todaydate, userId }, { goal1, goal2, goal3, goal4, goal5, todaydate, userId }, { useFindAndModify: false })
                     .then(() => {
                         res.status(200).json('Marked Completed')
                     })
@@ -121,7 +135,7 @@ router.post('/addmainwrapdata', (req, res) => {
 // POST 
 router.post('/addmainwrapdata2', (req, res) => {
     const { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId } = req.body;
-    Wrap_Model.countDocuments({ todaydate })
+    Wrap_Model.countDocuments({ todaydate, userId })
         .then((count) => {
             if (count === 0) {
                 const newGratitude = new Wrap_Model({
@@ -145,7 +159,7 @@ router.post('/addmainwrapdata2', (req, res) => {
                     })
                     .catch(err => res.status(500).json(`Server Error is ${err}`))
             } else {
-                Wrap_Model.findOneAndUpdate({ todaydate }, { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId }, { useFindAndModify: false })
+                Wrap_Model.findOneAndUpdate({ todaydate, userId }, { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId }, { useFindAndModify: false })
                     .then(() => {
                         res.status(200).json('Marked Completed')
                     })
@@ -160,7 +174,7 @@ router.post('/addmainwrapdata2', (req, res) => {
 // POST 
 router.post('/addmainwrapdata3', (req, res) => {
     const { soulprint, todaydate, userId } = req.body;
-    Wrap_Model.countDocuments({ todaydate })
+    Wrap_Model.countDocuments({ todaydate, userId })
         .then((count) => {
             if (count === 0) {
                 const newTheSoulPrint = new Wrap_Model({
@@ -184,7 +198,7 @@ router.post('/addmainwrapdata3', (req, res) => {
                     })
                     .catch(err => res.status(500).json(`Server Error is ${err}`))
             } else {
-                Wrap_Model.findOneAndUpdate({ todaydate }, { soulprint, todaydate, userId }, { useFindAndModify: false })
+                Wrap_Model.findOneAndUpdate({ todaydate, userId }, { soulprint, todaydate, userId }, { useFindAndModify: false })
                     .then(() => {
                         res.status(200).json('Marked Completed')
                     })
@@ -200,16 +214,28 @@ router.post('/addmainwrapdata3', (req, res) => {
 // POST 
 router.post('/addthesoulprint', (req, res) => {
     const { soulprint, todaydate, userId } = req.body;
-    const newTheSoulPrint = new SoulPrints_Model({
-        soulprint,
-        todaydate,
-        userId
-    });
-    newTheSoulPrint.save()
-        .then((data) => {
-            res.status(200).json(data)
+    SoulPrints_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                const newTheSoulPrint = new SoulPrints_Model({
+                    soulprint,
+                    todaydate,
+                    userId
+                });
+                newTheSoulPrint.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                SoulPrints_Model.findOneAndUpdate({ todaydate, userId }, { soulprint }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
         })
-        .catch(err => res.status(500).json(`Server Error is ${err}`))
+        .catch(err => res.status(500).json('Server Error'))
 });
 
 
@@ -218,20 +244,32 @@ router.post('/addthesoulprint', (req, res) => {
 // POST 
 router.post('/addgratitude', (req, res) => {
     const { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5, todaydate, userId } = req.body;
-    const newGratitude = new Gratitude_Model({
-        gratitude1,
-        gratitude2,
-        gratitude3,
-        gratitude4,
-        gratitude5,
-        todaydate,
-        userId,
-    });
-    newGratitude.save()
-        .then((data) => {
-            res.status(200).json(data)
+    Gratitude_Model.countDocuments({ todaydate, userId })
+        .then((count) => {
+            if (count === 0) {
+                const newGratitude = new Gratitude_Model({
+                    gratitude1,
+                    gratitude2,
+                    gratitude3,
+                    gratitude4,
+                    gratitude5,
+                    todaydate,
+                    userId,
+                });
+                newGratitude.save()
+                    .then((data) => {
+                        res.status(200).json(data)
+                    })
+                    .catch(err => res.status(500).json(`Server Error is ${err}`))
+            } else {
+                Gratitude_Model.findOneAndUpdate({ todaydate, userId }, { gratitude1, gratitude2, gratitude3, gratitude4, gratitude5 }, { useFindAndModify: false })
+                    .then(() => {
+                        res.status(200).json('Marked Completed')
+                    })
+                    .catch(err => res.status(500).json('Server Error'))
+            }
         })
-        .catch(err => res.status(500).json(`Server Error is ${err}`))
+        .catch(err => res.status(500).json('Server Error'))
 });
 
 
@@ -310,15 +348,11 @@ router.get('/printbookfetchwrap/:userId', (req, res) => {
 // POST 
 router.get('/checkdailygoalscount/:userId/:todaydate', (req, res) => {
     const { userId, todaydate } = req.params;
-    Goals_Model.countDocuments({ todaydate, userId })
-        .then((count) => {
-            if (count === 0) {
-                res.status(200).json('Not Found')
-            } else {
-                res.status(201).json('Found')
-            }
+    Goals_Model.find({ todaydate, userId }).sort({date: -1})
+        .then(data => {
+            res.status(200).json(data);
         })
-        .catch(err => res.status(500).json('Server Error'))
+        .catch(err => res.status(400).json(`Error: ${err}`))
 });
 
 
@@ -327,7 +361,32 @@ router.get('/checkdailygoalscount/:userId/:todaydate', (req, res) => {
 // POST 
 router.get('/checkdailygratitudecount/:userId/:todaydate', (req, res) => {
     const { userId, todaydate } = req.params;
-    Gratitude_Model.countDocuments({ todaydate, userId })
+    Gratitude_Model.find({ todaydate, userId }).sort({date: -1})
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(err => res.status(400).json(`Error: ${err}`))
+});
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/checkdailysoulprintcount/:userId/:todaydate', (req, res) => {
+    const { userId, todaydate } = req.params;
+    SoulPrints_Model.find({ todaydate, userId }).sort({date: -1})
+        .then(data => {
+            res.status(200).json(data);
+        })
+        .catch(err => res.status(400).json(`Error: ${err}`))
+});
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.get('/checkmainfivegoals/:userId/:todaydate', (req, res) => {
+    const { userId, todaydate } = req.params;
+    Goalfive_Model.countDocuments({ userId })
         .then((count) => {
             if (count === 0) {
                 res.status(200).json('Not Found')
@@ -338,21 +397,6 @@ router.get('/checkdailygratitudecount/:userId/:todaydate', (req, res) => {
         .catch(err => res.status(500).json('Server Error'))
 });
 
-// Database CRUD Operations
-// @POST Request to add item in cart
-// POST 
-router.get('/checkdailysoulprintcount/:userId/:todaydate', (req, res) => {
-    const { userId, todaydate } = req.params;
-    SoulPrints_Model.countDocuments({ todaydate, userId })
-        .then((count) => {
-            if (count === 0) {
-                res.status(200).json('Not Found')
-            } else {
-                res.status(201).json('Found')
-            }
-        })
-        .catch(err => res.status(500).json('Server Error'))
-});
 
 
 
