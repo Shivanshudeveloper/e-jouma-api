@@ -334,7 +334,7 @@ router.get('/longfivegoalsmarkcomplete/:goalId', (req, res) => {
 // POST 
 router.get('/printbookfetchwrap/:userId', (req, res) => {
     const { userId } = req.params;
-    Wrap_Model.find({ userId }).sort({date: -1})
+    Wrap_Model.find({ userId })
         .then(data => {
             res.status(200).json(data);
         })
