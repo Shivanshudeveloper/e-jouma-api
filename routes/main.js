@@ -13,8 +13,7 @@ const SoulPrints_Model = require('../models/SoulPrints');
 const Wrap_Model = require('../models/Wrap');
 
 
-// const stripe = require('stripe')('sk_test_51IQmDSLbp71n4XnI9AJa2u03XqqNh2YTPlLtiAuiOOK6lrnpj8V1RnSNbxesLdCkChISlZXMJ89gIyr8WOBwCAlh00BCFkGRAW')
-const stripe = require('stripe')('sk_test_51IWmCjIMEJNIatcZBblXYwHiQFbg23KSjADaenlFk1gbyJXBWJ7M7eVdvuwMaYl518dwB7qJWhsvbvyzAo7UtziP007SKG45Nr')
+const stripe = require('stripe')('sk_test_51InJOCJegW8ESdrHJXF6anBwEWJMrxOlSdTiwWFMYs3B0VqCJfLdVlIpX05fNp2XWPBXXjh8ou8TuqhCQiqeXmt5006D7WwSfy')
 
 // TEST
 // @GET TEST
@@ -553,13 +552,14 @@ router.get('/fetchfivegoals/:userId', (req, res) => {
 });
 
 // Database CRUD Operations
-// @POST Request to the Payment
+// @POST Request to the Payment & Charges
 // POST 
 router.post('/charges', async (req, res) => {
     const {email, amount} = req.body;
+    
     const paymentIntent = await stripe.paymentIntents.create({
         amount: amount * 100,
-        currency: 'usd',
+        currency: 'eur',
         // Verify your integration in this guide by including this parameter
         metadata: {integration_check: 'accept_a_payment'},
         receipt_email: email,
@@ -567,6 +567,7 @@ router.post('/charges', async (req, res) => {
 
     res.json({'client_secret': paymentIntent['client_secret']})
 });
+
 
 
 // Database CRUD Operations
@@ -590,11 +591,7 @@ router.post('/paymentsuccessfull', (req, res) => {
             });
             newSuccessfullPayment.save()
                 .then(() => {
-                    Business_Model.updateMany({email}, { 'paid': true }, { useFindAndModify: false })
-                        .then(() => {
-                            res.status(200).json('Users Update')
-                        })
-                        .catch(err => console.log(err))
+                    res.status(200).json('Users Update')
                 })
                 .catch(err => res.status(500).json(`Server Error is ${err}`))
         } else {

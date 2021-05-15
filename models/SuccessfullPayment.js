@@ -1,42 +1,42 @@
 const mongoose = require('mongoose');
-// Schema
-const successfullpaymentDataSchema = new mongoose.Schema({
+
+const usersSuccessfullPaymentchema = new mongoose.Schema({
     transactionId: {
         type: String,
-        required: true
+        required: false
+    },
+    userId: {
+        type: String,
+        required: false
     },
     email: {
         type: String,
-        required: true
+        required: false
     },
-    firstname: {
+    fullName: {
         type: String,
-        required: true
+        required: false
     },
-    lastname: {
+    phoneno: {
         type: String,
-        required: true
+        required: false
     },
     address: {
         type: String,
-        required: true
+        required: false
     },
     zipcode: {
         type: String,
-        required: true
-    },
-    businessphoneno: {
-        type: String,
-        required: true
+        required: false
     },
     amount: {
-        type: Number,
-        required: true
+        type: String,
+        required: false
     },
     date: {
         type: Date,
         default: Date.now
     }
 })
-const successfullpayments = mongoose.model('successfullpayments', successfullpaymentDataSchema)
-module.exports = successfullpayments
+const SuccessfullPayment = mongoose.model('SuccessfullPayment', usersSuccessfullPaymentchema)
+module.exports = SuccessfullPayment
