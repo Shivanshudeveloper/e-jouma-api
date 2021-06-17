@@ -10,6 +10,7 @@ const Registrations_Model = require('../models/Registrations');
 const Gratitude_Model = require('../models/Gratitude');
 const SuccessfullPayment_Model = require('../models/SuccessfullPayment');
 const SoulPrints_Model = require('../models/SoulPrints');
+const SubscribeUser_Model = require('../models/SubscribeUser');
 const Wrap_Model = require('../models/Wrap');
 
 
@@ -20,6 +21,53 @@ const stripe = require('stripe')('sk_test_51InJOCJegW8ESdrHJXF6anBwEWJMrxOlSdTiw
 // GET 
 router.get('/test', (req, res) => {
     res.send("Working");
+});
+
+
+// Database CRUD Operations
+// @POST Request to add item in cart
+// POST 
+router.post('/subscribeuser', (req, res) => {
+    const { email } = req.body;
+    const newGoalFive = new SubscribeUser_Model({
+        email
+    });
+    newGoalFive.save()
+        .then((data) => {
+            res.status(200).json(data)
+
+            // let transporter, mailOption, mailText, emailArr;
+
+            // mailText = `
+            
+            // Video Link: https://youtu.be/hdkFtPgzkYs
+            // Book Link: https://evenupload.page.link/C2WEt2DwpUbpXSaMA
+            
+            // `
+
+            // Successfully shared data triggering a mail to the data senders email address
+            // transporter = nodemailer.createTransport({
+            //     service: 'gmail',
+            //     auth: {
+            //         user: 'infowise.cy@gmail.com',
+            //         pass: 'Shiv@nshu'
+            //     }
+            // }),
+            // mailOption = {
+            //     from: 'noreply@evencloud.com',
+            //     to: email,
+            //     subject: `File has been Received`,
+            //     html: mailText
+            // },
+            // transporter.sendMail(mailOption, (err, data) => {
+            //     console.log(err, data);
+            //     console.log('Email Sent!');
+            // })
+
+
+
+        })
+        .catch(err => res.status(500).json(`Server Error is ${err}`))
 });
 
 
